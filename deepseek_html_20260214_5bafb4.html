@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ولنتاین بازیگوش ❤️</title>
+    <style>
+        /* استایل پایه */
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fce4e4, #ffe0f0);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .page.active {
+            display: flex;
+        }
+        /* صفحه اول */
+        .question-box {
+            text-align: center;
+            background: rgba(255, 240, 245, 0.8);
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.2);
+            border: 2px solid #ffb6c1;
+        }
+        h1 {
+            color: #d43f5e;
+            font-size: 2rem;
+        }
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background-color: #ff8da1;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 5px 0 #b04b5e;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            touch-action: manipulation;
+            min-width: 120px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 0 0 #b04b5e;
+        }
+        .btn.secondary {
+            background-color: #a5d6ff;
+            box-shadow: 0 5px 0 #5f8ab6;
+        }
+        /* صفحه بازی */
+        .game-page {
+            position: relative;
+        }
+        .counter {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            color: #b03a5e;
+            border: 2px solid #ffa5b9;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+        .moving-btn {
+            position: fixed;
+            background-color: #ff4d6d;
+            border: 4px solid #ffffff;
+            color: white;
+            padding: 15px 30px;
+            font-size: 2rem;
+            border-radius: 60px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            touch-action: manipulation;
+            z-index: 100;
+            transition: transform 0.1s;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .moving-btn:active {
+            transform: scale(0.95);
+        }
+        /* صفحه پیام نهایی */
+        .message-page {
+            text-align: center;
+        }
+        .cat-sticker {
+            font-size: 5rem;
+            margin: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+        .final-message {
+            font-size: 2rem;
+            color: #c44569;
+        }
+        /* صفحه اصلی قلب باران */
+        #main-page {
+            background: linear-gradient(135deg, #fce4e4, #ffe0f0);
+        }
+        .heart-touch-area {
+            background-color: rgba(255, 200, 220, 0.4);
+            border-radius: 40px;
+            padding: 40px 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(2px);
+            border: 2px dashed #ffb6c1;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+            cursor: pointer;
+            touch-action: manipulation;
+            text-align: center;
+        }
+        #floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .heart-float {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.8;
+            animation: floatUp 2s ease-out forwards;
+            color: #ff3366;
+            user-select: none;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-150px) scale(0.5);
+                opacity: 0;
+            }
+        }
+        .footer {
+            margin-top: 30px;
+            color: #cc7b9b;
+        }
+    </style>
+</head>
+<body>
+    <!-- صفحه اول: سوال -->
+    <div id="page-question" class="page active">
+        <div class="question-box">
+            <h1>🌸 از دست من ناراحتی؟ 🌸</h1>
+            <div class="button-group">
+                <button class="btn" id="btn-yes">بله</button>
+                <button class="btn secondary" id="btn-no">خیر</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- صفحه بازی: دکمه بله فراری -->
+    <div id="page-game" class="page">
+        <div class="counter" id="game-counter">تلاش 1 / 5</div>
+        <button class="moving-btn" id="moving-yes">بله</button>
+    </div>
+
+    <!-- صفحه پیام نهایی -->
+    <div id="page-message" class="page">
+        <div class="message-page">
+            <div class="cat-sticker">😻🐈💕</div>
+            <div class="final-message">بس کن دختر!</div>
+            <button class="btn" id="btn-not-sad">ناراحت نیستم</button>
+        </div>
+    </div>
+
+    <!-- صفحه اصلی: قلب باران -->
+    <div id="main-page" class="page">
+        <div class="container">
+            <h1>❤️ ولنتاین مبارک ❤️</h1>
+            <p>برای تو که عشق منی</p>
+            <div class="heart-touch-area" id="touchArea">
+                <span style="font-size: 4rem;">❤️</span>
+                <p>هر جا لمس کنی قلب می‌باره</p>
+            </div>
+            <div class="instruction">
+                ✨ هر جای صفحه رو لمس کن ✨
+            </div>
+            <div class="footer">
+                با عشق برای تو
+            </div>
+        </div>
+        <div id="floating-hearts"></div>
+    </div>
+
+    <script>
+        // مدیریت صفحات
+        const pages = {
+            question: document.getElementById('page-question'),
+            game: document.getElementById('page-game'),
+            message: document.getElementById('page-message'),
+            main: document.getElementById('main-page')
+        };
+
+        // عناصر دکمه‌ها
+        const btnYes = document.getElementById('btn-yes');
+        const btnNo = document.getElementById('btn-no');
+        const movingYes = document.getElementById('moving-yes');
+        const gameCounter = document.getElementById('game-counter');
+        const btnNotSad = document.getElementById('btn-not-sad');
+
+        // متغیرهای بازی
+        let clickCount = 0;
+        const maxClicks = 5;
+
+        // توابع نمایش صفحات
+        function showPage(pageId) {
+            Object.values(pages).forEach(page => page.classList.remove('active'));
+            pages[pageId].classList.add('active');
+        }
+
+        // توابع مربوط به صفحه اصلی قلب باران
+        let mainPageListenersAttached = false;
+        const floatingHearts = document.getElementById('floating-hearts');
+        const touchArea = document.getElementById('touchArea');
+
+        function createHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.className = 'heart-float';
+            const symbols = ['❤️', '🧡', '💛', '💚', '💙', '💜', '🤍', '💖', '💗', '💘', '💝'];
+            const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+            heart.textContent = randomSymbol;
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            const size = Math.floor(Math.random() * 20 + 20) + 'px';
+            heart.style.fontSize = size;
+            heart.style.color = `hsl(${Math.random() * 20 + 340}, 80%, 65%)`;
+            floatingHearts.appendChild(heart);
+            setTimeout(() => {
+                heart.remove();
+            }, 2000);
+        }
+
+        function handleTouch(event) {
+            event.preventDefault();
+            const touches = event.touches;
+            for (let i = 0; i < touches.length; i++) {
+                const touch = touches[i];
+                createHeart(touch.clientX, touch.clientY - 10);
+            }
+        }
+
+        function handleMouse(event) {
+            createHeart(event.clientX, event.clientY - 10);
+        }
+
+        function attachMainPageListeners() {
+            if (!mainPageListenersAttached) {
+                document.addEventListener('touchstart', handleTouch, { passive: false });
+                document.addEventListener('mousedown', handleMouse);
+                mainPageListenersAttached = true;
+            }
+        }
+
+        function detachMainPageListeners() {
+            if (mainPageListenersAttached) {
+                document.removeEventListener('touchstart', handleTouch);
+                document.removeEventListener('mousedown', handleMouse);
+                mainPageListenersAttached = false;
+            }
+        }
+
+        // وقتی صفحه اصلی فعال میشه
+        function showMainPage() {
+            showPage('main');
+            attachMainPageListeners();
+        }
+
+        // حرکت رندوم دکمه بله
+        function moveButtonRandomly(btn) {
+            const maxX = window.innerWidth - btn.offsetWidth - 20; // 20px حاشیه
+            const maxY = window.innerHeight - btn.offsetHeight - 20;
+            const randomX = Math.max(10, Math.min(maxX, Math.random() * maxX));
+            const randomY = Math.max(10, Math.min(maxY, Math.random() * maxY));
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+        }
+
+        // شروع بازی
+        function startGame() {
+            clickCount = 0;
+            updateCounter();
+            // نمایش دکمه بله و موقعیت اولیه تصادفی
+            movingYes.style.display = 'block';
+            moveButtonRandomly(movingYes);
+            showPage('game');
+        }
+
+        function updateCounter() {
+            gameCounter.textContent = `تلاش ${clickCount + 1} / ${maxClicks}`;
+        }
+
+        // رویداد کلیک روی بله در صفحه اول
+        btnYes.addEventListener('click', () => {
+            startGame();
+        });
+
+        btnYes.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startGame();
+        });
+
+        // رویداد روی خیر در صفحه اول
+        function goToMainFromNo() {
+            showMainPage();
+        }
+        btnNo.addEventListener('click', goToMainFromNo);
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            goToMainFromNo();
+        });
+
+        // رویداد روی دکمه بله متحرک
+        function onMovingYesClick() {
+            clickCount++;
+            if (clickCount < maxClicks) {
+                updateCounter();
+                moveButtonRandomly(movingYes);
+            } else {
+                // پایان بازی، نمایش صفحه پیام
+                movingYes.style.display = 'none';
+                showPage('message');
+            }
+        }
+
+        movingYes.addEventListener('click', onMovingYesClick);
+        movingYes.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            onMovingYesClick();
+        });
+
+        // رویداد روی دکمه "ناراحت نیستم"
+        btnNotSad.addEventListener('click', () => {
+            showMainPage();
+        });
+        btnNotSad.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            showMainPage();
+        });
+
+        // تنظیمات اولیه: صفحه اصلی رو مخفی نگه داریم، صفحه سوال فعاله.
+        // ولی برای اطمینان، همه listenerهای اضافی رو detach می‌کنیم
+        detachMainPageListeners();
+
+        // همچنین اگر کاربر صفحه اصلی رو با دکمه ناراحت نیستم فعال کرد، listenerها attached می‌شوند.
+        // اما باید دقت کنیم که وقتی صفحه اصلی فعال میشه، listenerها اضافه بشن.
+        // و وقتی صفحه اصلی رو ترک می‌کنیم (که در این طراحی هیچوقت ترک نمیشه جز با رفرش)، listenerها detached بشن. اما در اینجا ما از صفحه اصلی به صفحه دیگه نمی‌ریم، فقط بهش می‌ایم. بنابراین نیازی به detach نیست. ولی اگر بخواهیم بعداً صفحه اصلی رو ترک کنیم، باید detach کنیم. اینجا ترک نمی‌کنیم. اما اگر کاربر به صفحه اصلی رفت و بعد خواست برگرده؟ طراحی ما بر این اساس نیست، پس ok.
+        // با این حال در startGame اگر صفحه اصلی فعال نباشه listenerها رو detached نگه می‌داریم.
+        // در startGame ما صفحه game رو فعال می‌کنیم و اون صفحه listener نداره.
+        // در showMainPage ما listenerها رو attach می‌کنیم.
+
+        // جلوگیری از رفتار پیش‌فرض لمس روی دکمه‌ها
+        // همچنین برای touchArea در صفحه اصلی هم رویدادهای لمسی داریم که اون هم کار می‌کنه.
+        // برای touchArea نیازی به کار اضافه نیست چون listenerهای عمومی داریم.
+
+        // در صفحه اصلی، ما ناحیه heart-touch-area رو داریم که نشان می‌ده لمس کن، اما listenerهای عمومی به همه جا گوش می‌دن.
+        // این خوبه.
+
+        // توجه: برای اینکه در صفحه بازی، لمس‌های دیگه باعث ایجاد قلب نشه، باید listenerهای main رو detached کنیم. ما startGame رو که صدا می‌زنیم صفحه game فعال میشه و main غیرفعال. اما listenerهای main هنوز ممکنه attached باشن اگر قبلاً main فعال بوده. در ابتدا main فعال نیست. ولی اگر کاربر از main به جای دیگه نره، این اتفاق نمی‌افته. اما اگر کاربر از طریق دکمه خیر به main بره، listenerها attached میشن. اگر بعداً بخواهیم بازی رو شروع کنیم، باید listenerها رو detached کنیم. اما در طراحی ما، بعد از رفتن به main، راهی برای برگشتن به سوال نیست. پس بازی فقط یکبار از اول اجرا میشه. ولی اگر کاربر بخواد دوباره بازی کنه باید صفحه رو رفرش کنه. پس برای شروع بازی از حالت اولیه (که main فعال نیست) listenerها detached هستن. بنابراین تداخلی نداریم.
+
+        // اما برای اطمینان، در startGame می‌تونیم detach کنیم.
+        function startGame() {
+            detachMainPageListeners();
+            clickCount = 0;
+            updateCounter();
+            movingYes.style.display = 'block';
+            moveButtonRandomly(movingYes);
+            showPage('game');
+        }
+
+        // همچنین در showMainPage attach می‌کنیم
+        function showMainPage() {
+            showPage('main');
+            attachMainPageListeners();
+        }
+
+        // در goToMainFromNo هم showMainPage رو صدا می‌زنیم
+        // و در btnNotSad هم همین.
+
+        // نهایتاً وقتی صفحه game فعال میشه، باید مطمئن بشیم دکمه متحرک قابل مشاهده است.
+        // وقتی صفحه message فعال میشه، movingYes رو مخفی می‌کنیم (قبلاً در onMovingYesClick این کار انجام شده).
+
+        // تنظیمات اولیه: هیچ listenerای attached نیست. چون صفحه اول فعاله و main غیرفعاله. خوبه.
+        // اما برای اطمینان، detachMainPageListeners رو صدا می‌زنیم.
+        detachMainPageListeners();
+    </script>
+</body>
+</html>
